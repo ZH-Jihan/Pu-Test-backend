@@ -1,14 +1,14 @@
-const  mongoose = require("mongoose");
 const dotenv = require("dotenv").config();
-const app = require("./app")
+const app = require("./app");
+const dbConnect = require("./utils/dbConnect");
 
 
-mongoose.connect(process.env.SERVER).then(()=>{
- console.log("MongoDB Database Connacet");
+dbConnect()
+.then(() => {
+    app.listen(process.env.PORT || 8000, () => {
+        console.log(`⚙️ Server is running at port : ${process.env.PORT}`);
+    })
 })
-
-const port = process.env.PORT || 5000;
-
-app.listen(port, () => {
-    console.log(`Presidency App Runing Prot ${port}`);
-});
+.catch((err) => {
+    console.log("MONGO db connection failed !!! ", err);
+})
