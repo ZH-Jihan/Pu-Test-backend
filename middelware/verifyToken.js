@@ -9,11 +9,11 @@ const {promisify} = require("util")
  */
 
 module.exports = async (req,res,next) => {
-    
+    console.log(req.headers);
     try {
         // const token = req.cookies?.accesToken;
         const token = req.headers?.cookie?.split("=")?.[1]
-        
+        console.log(token);
         if (!token) {
             return res.status(401).json({
                 status: "fail",
