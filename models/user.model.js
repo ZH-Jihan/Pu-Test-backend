@@ -33,6 +33,7 @@ const userSchema = mongoose.Schema(
                 message: "Password {VALUE} is not strong enough",
             },
         },
+        demo: String,
         confirmPassword:{
             type: String,
             required:[true,"Please confirm your password"],
@@ -58,8 +59,6 @@ const userSchema = mongoose.Schema(
             required:[true, "Please Provied permission for this user"],
         },
         passwordChangeAt: Date,
-        passwordResetToken: String,
-        passwordResetExpires: Date,
     },
     {
         timestamps:true,

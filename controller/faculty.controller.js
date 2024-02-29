@@ -2,10 +2,7 @@ const Faculty = require("../models/faculty.model");
 
 module.exports.getAllFaculty = async (req, res, next) => {
   const allFaculty = await Faculty.find({});
-  res.status(200).json({
-    status: "Success",
-    data: allFaculty,
-  });
+  res.send(allFaculty);
 };
 module.exports.getOneFaculty = async (req, res, next) => {
   const {id} = req.params;

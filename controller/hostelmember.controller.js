@@ -6,7 +6,7 @@ module.exports.getAllMember = async (req,res,next) =>{
         res.send(allMember)
       }
       catch (error) {
-        console.error(error);
+        
         res.status(500).send(error);
       }
 }

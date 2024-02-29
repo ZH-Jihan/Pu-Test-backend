@@ -1,7 +1,6 @@
 const { signupService, findUserByEmail } = require("../services/user.service");
 const { generateToken } = require("../utils/token");
 const User = require("../models/user.model");
-const cookieParser = require("cookie-parser");
 
 exports.getAllUser = async (req, res, next) => {
   const allUser = await User.find({});
@@ -42,6 +41,7 @@ exports.singup = async (req, res) => {
  */
 
 exports.login = async (req, res) => {
+
   try {
     const { email, password } = req.body;
     if (!email || !password) {
@@ -61,7 +61,7 @@ exports.login = async (req, res) => {
       });
     }
 
-    //...User Password hash and database password hash compare ..//
+    //...User Password hash and database password hash compare ../
     const isPasswordValid = user.comparePassword(password, user.password);
     
     if (!isPasswordValid) {
@@ -77,23 +77,23 @@ exports.login = async (req, res) => {
         error: "Your account is not active",
       });
     }
-    //..Generate JWT Access Token ...//
+    //..Generate JWT Access Token .../
     const token = generateToken(user);
-
-    //..Set Access Token In Cokies ..//
-    res.cookie (String(user.id),token,{
-      path:"/",
-      expires: new Date(Date.now() + 10000*30),
+    const options = {
       httpOnly: true,
-      sameSite:"lax"
-    })
+      secure: true,
+      sameSite: 'None' ,
+      path:"/"
+  }
+    //..Set Access Token In Cokies ..//
 
     const { password: pwd, ...others } = user.toObject();
-    res.status(200).json({
+    res.status(200)
+    .cookie("accesToken",token,options)
+    .json({
       status: "Success",
       message: "Successfully LogedIn",
-        user: others,
-        token: token
+      token:token
     });
   } catch (error) {
     res.status(500).json({
@@ -121,3 +121,53 @@ exports.getMe = async (req, res) => {
     });
   }
 };
+
+exports.logOutUSer = async(req,res)=>{
+  
+  const user = await findUserByEmail(req.user?.email);
+  
+  if (user) {
+    const options = {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'None' ,
+      path:"/"
+  }
+
+  return res
+  .status(200)
+  .clearCookie("accesToken",options)
+  .clearCookie("userInfo",options)
+  .json({status : "logOut Success"})
+  }
+}
+
+exports.changeCurrentPassword = async(req, res) => {
+
+ try {
+   const {oldPassword, newPassword} = req.body
+ 
+   const user = await User.findById(req.user?.id)
+   console.log(user);
+   const isPasswordValid = user.comparePassword(oldPassword,user.password);
+ 
+   if (!isPasswordValid) {
+     return res.status(403).json({
+       status: "fail",
+       error: "Ole Password is not correct",
+     });
+   }
+ 
+   user.password = newPassword
+   user.passwordChangeAt = new Date()
+   await user.save({validateBeforeSave: false})
+ 
+   return res
+   .status(200)
+   .json({
+    status: "Password Successfully Changed",
+    user:user
+  })
+ } catch (error) {
+  console.log(error)}
+}

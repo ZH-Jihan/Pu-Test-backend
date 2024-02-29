@@ -7,8 +7,8 @@ const routes = express.Router();
 routes
   .route("/")
   .get(
-    // verifyToken,
-    // authorization.menubase("Hostel Member"),
+    verifyToken,
+    authorization.menubase("Hostel Member"),
     memberControler.getAllMember
   )
   .post(
