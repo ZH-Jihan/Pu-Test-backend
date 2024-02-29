@@ -10,7 +10,7 @@ const hostelmemberRouts = require("./routes/v1/hostelmember.route");
 
 // Middleware
 app.use(cors(
-  {origin: 'http://localhost:3000', 
+  {origin: '*', 
   credentials: true,}
 ));
 app.use(express.json());
