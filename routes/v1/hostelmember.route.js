@@ -8,13 +8,11 @@ routes
   .route("/")
   .get(
     verifyToken,
-    authorization.menubase("Hostel Member"),
     memberControler.getAllMember
   )
   .post(
     verifyToken,
     authorization.rolebase("admin", "editor"),
-    authorization.menubase("Hostel Member"),
     memberControler.postMember
   );
 
@@ -22,13 +20,11 @@ routes
   .route("/:id")
   .get(
     verifyToken,
-    authorization.menubase("Hostel Member"),
     memberControler.getOneMember
   )
   .put(
     verifyToken,
     authorization.rolebase("admin", "editor"),
-    authorization.menubase("Hostel Member"),
     memberControler.editMember
   );
 

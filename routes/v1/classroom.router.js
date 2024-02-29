@@ -17,7 +17,6 @@ routes
   .route("/:id")
   .get(
     verifyToken,
-    authorization.menubase("classroom"),
     classRoomControlar.getOneClass
   )
   .put(verifyToken, classRoomControlar.updateOneClass)
